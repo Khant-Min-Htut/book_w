@@ -1,10 +1,19 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+// const response = await fetch(`http://localhost:3000/api/books`, {
+//   method: "POST",
+//   body: JSON.stringify({
+//     title,
+//     caption
+//   }),
+//   headers: { Authorization: `Bearer ${token}` },
+// });
+
 const protectRoute = async (req, res, next) => {
   try {
-    //get token
-    const token = req.header("Authorization").replace("Bearer", "");
+    // get token
+    const token = req.header("Authorization").replace("Bearer ", "");
     if (!token)
       return res
         .status(401)
@@ -20,7 +29,7 @@ const protectRoute = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.log("Authentication error:", error.message);
+    console.error("Authentication error:", error.message);
     res.status(401).json({ message: "Token is not valid" });
   }
 };

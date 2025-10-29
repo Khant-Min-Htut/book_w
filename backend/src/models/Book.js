@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const bookSchema = new mongoose.Schema(
   {
@@ -15,7 +15,7 @@ const bookSchema = new mongoose.Schema(
       required: true,
     },
     rating: {
-      type: String,
+      type: Number,
       required: true,
       min: 1,
       max: 5,
