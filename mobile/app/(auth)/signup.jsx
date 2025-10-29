@@ -14,6 +14,7 @@ import COLORS from "../../constants/colors";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../store/authStore";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -32,9 +33,11 @@ export default function Signup() {
   };
 
   return (
-    <KeyboardAvoidingView
+    <KeyboardAwareScrollView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid={true}
+      extraScrollHeight={20} // optional
     >
       <View style={styles.container}>
         <View style={styles.card}>
@@ -142,6 +145,6 @@ export default function Signup() {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }

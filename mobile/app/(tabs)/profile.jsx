@@ -66,7 +66,7 @@ export default function Profile() {
       setDeleteBookId(bookId);
 
       const response = await fetch(
-        "https://book-w.onrender.com/api/books/${bookId}",
+        `https://book-w.onrender.com/api/books/${bookId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

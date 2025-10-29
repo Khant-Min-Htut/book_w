@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
 
 import { useAuthStore } from "../../store/authStore";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,9 +33,11 @@ export default function Login() {
   if (isCheckingAuth) return null;
 
   return (
-    <KeyboardAvoidingView
+    <KeyboardAwareScrollView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid={true}
+      extraScrollHeight={20} // optional
     >
       <View style={styles.container}>
         {/* ILLUSTRATION */}
@@ -128,6 +131,6 @@ export default function Login() {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }

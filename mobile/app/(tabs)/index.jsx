@@ -34,7 +34,7 @@ export default function Home() {
       else if (pageNum === 1) setLoading(true);
 
       const response = await fetch(
-        "https://book-w.onrender.com/api/books?page=${pageNum}&limit=2",
+        `https://book-w.onrender.com/api/books?page=${pageNum}&limit=2`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
