@@ -42,6 +42,8 @@ export default function Home() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      console.log("API URL:", API_URL);
+
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.message || "Failed to fetch books");
