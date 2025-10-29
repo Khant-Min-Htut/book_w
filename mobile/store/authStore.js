@@ -1,7 +1,13 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_URL = "https://book-w.onrender.com/api/auth";
+// const API_URL = "https://book-w.onrender.com/api/auth";
+
+// import { API_URL } from "../constants/api";
+
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.backendUrl;
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -11,7 +17,7 @@ export const useAuthStore = create((set) => ({
   register: async (username, email, password) => {
     set({ isLoading: true });
     try {
-      const res = await fetch(`${API_URL}/register`, {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
@@ -36,7 +42,7 @@ export const useAuthStore = create((set) => ({
   login: async (email, password) => {
     set({ isLoading: true });
     try {
-      const res = await fetch(`${API_URL}/login`, {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

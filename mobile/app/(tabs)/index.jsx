@@ -18,6 +18,11 @@ import { formatPublishDate } from "../../lib/utils";
 import COLORS from "../../constants/colors";
 import Loader from "../../components/Loader";
 
+// import { API_URL } from "../../constants/api";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.backendUrl;
+
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function Home() {
@@ -33,12 +38,9 @@ export default function Home() {
       if (refresh) setRefreshing(true);
       else if (pageNum === 1) setLoading(true);
 
-      const response = await fetch(
-        `https://book-w.onrender.com/api/books?page=${pageNum}&limit=2`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`${API_URL}/books?page=${pageNum}&limit=2`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await response.json();
       if (!response.ok)

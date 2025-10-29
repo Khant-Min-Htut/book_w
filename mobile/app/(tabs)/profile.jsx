@@ -20,6 +20,11 @@ import { Image } from "expo-image";
 import { sleep } from ".";
 import Loader from "../../components/Loader";
 
+// import { API_URL } from "../../constants/api";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.backendUrl;
+
 export default function Profile() {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,12 +39,9 @@ export default function Profile() {
     try {
       setIsLoading(true);
 
-      const response = await fetch(
-        "https://book-w.onrender.com/api/books/user",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`${API_URL}/books/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await response.json();
       if (!response.ok)
@@ -65,13 +67,10 @@ export default function Profile() {
     try {
       setDeleteBookId(bookId);
 
-      const response = await fetch(
-        `https://book-w.onrender.com/api/books/${bookId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`${API_URL}/books/${bookId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await response.json();
       if (!response.ok)

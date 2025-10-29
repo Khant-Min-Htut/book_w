@@ -16,6 +16,10 @@ import styles from "../../assets/styles/create.styles";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
 import { useAuthStore } from "../../store/authStore";
+// import { API_URL } from "../../constants/api";
+import Constants from "expo-constants";
+
+const API_URL = Constants.expoConfig.extra.backendUrl;
 
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
@@ -30,8 +34,6 @@ export default function Create() {
 
   const router = useRouter();
   const { token } = useAuthStore();
-
-  console.log(token);
 
   const pickImage = async () => {
     try {
@@ -101,7 +103,7 @@ export default function Create() {
 
       const imageDataUrl = `data:${imageType};base64,${imageBase64}`;
 
-      const response = await fetch("https://book-w.onrender.com/api/books", {
+      const response = await fetch(`${API_URL}/books`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
