@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "projects": [
+    {
+      "src": "mobile/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "mobile/dist"
+      }
+    }
+  ]
+}
