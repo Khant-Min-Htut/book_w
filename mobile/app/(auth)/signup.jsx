@@ -9,14 +9,11 @@ import {
   Alert,
 } from "react-native";
 import styles from "../../assets/styles/signup.styles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../store/authStore";
-// import { useAuthStore } from "../../store/authStore";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -24,20 +21,20 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { user, isLoading, register } = useAuthStore();
-
-  // const { user, isLoading, register, token } = useAuthStore();
+  const { user, isLoading, register, token } = useAuthStore();
 
   const router = useRouter();
 
-  const handleSignUp = () => {};
+  const handleSignUp = async () => {
+    const result = await register(username, email, password);
+
+    if (!result.success) Alert.alert("Error", result.error);
+  };
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled"
-      extraScrollHeight={50} // moves view a bit more above keyboard
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.container}>
         <View style={styles.card}>
@@ -145,6 +142,6 @@ export default function Signup() {
           </View>
         </View>
       </View>
-    </KeyboardAwareScrollView>
+    </KeyboardAvoidingView>
   );
 }

@@ -1,45 +1,77 @@
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const API_URL = "https://book-w.onrender.com/api/auth";
 
 export const useAuthStore = create((set) => ({
-  user: {
-    name: null,
-    token: null,
-    isLoading: false,
+  user: null,
+  token: null,
+  isLoading: false,
 
-    register: async (username, email, password) => {
-      set({ isLoading: true });
-      try {
-        const response = await fetch(
-          "http://localhost:3001/api/auth/register",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username,
-              email,
-              password,
-            }),
-          }
-        );
+  register: async (username, email, password) => {
+    set({ isLoading: true });
+    try {
+      const res = await fetch(`${API_URL}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-        const data = await response.json();
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to register");
 
-        if (!response.ok)
-          throw new Error(data.message || "Something went wrong");
+      await AsyncStorage.multiSet([
+        ["user", JSON.stringify(data.user)],
+        ["token", data.token],
+      ]);
 
-        await AsyncStorage.setItem("user", JSON.stringify(data.user));
-        await AsyncStorage.setItem("token", data.token);
+      set({ user: data.user, token: data.token, isLoading: false });
+      return { success: true };
+    } catch (error) {
+      set({ isLoading: false });
+      return { success: false, error: error.message };
+    }
+  },
 
-        set({ token: data.token, user: data.user, isLoading: false });
+  login: async (email, password) => {
+    set({ isLoading: true });
+    try {
+      const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-        return { success: true };
-      } catch (error) {
-        set({ isLoading: false });
-        return { success: false, error: error.message };
-      }
-    },
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to login");
+
+      await AsyncStorage.multiSet([
+        ["user", JSON.stringify(data.user)],
+        ["token", data.token],
+      ]);
+
+      set({ user: data.user, token: data.token, isLoading: false });
+      return { success: true };
+    } catch (error) {
+      set({ isLoading: false });
+      return { success: false, error: error.message };
+    }
+  },
+
+  checkAuth: async () => {
+    try {
+      const [token, userJson] = await AsyncStorage.multiGet(["token", "user"]);
+      const storedToken = token[1];
+      const storedUser = userJson[1] ? JSON.parse(userJson[1]) : null;
+
+      set({ token: storedToken, user: storedUser });
+    } catch (error) {
+      console.log("Auth check failed:", error);
+    }
+  },
+
+  logout: async () => {
+    await AsyncStorage.multiRemove(["token", "user"]);
+    set({ user: null, token: null });
   },
 }));
-/// hello world

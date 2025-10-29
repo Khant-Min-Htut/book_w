@@ -1,27 +1,40 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from "react-native";
 import { Link } from "expo-router";
-
-import React, { useState } from "react";
 import styles from "../../assets/styles/login.styles";
-import { Image } from "react-native";
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { useAuthStore } from "../../store/authStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, login, isCheckingAuth } = useAuthStore();
 
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    const result = await login(email, password);
+
+    if (!result.success) Alert.alert("Error", result.error);
+  };
+
+  if (isCheckingAuth) return null;
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled"
-      extraScrollHeight={50} // moves view a bit more above keyboard
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.container}>
         {/* ILLUSTRATION */}
@@ -32,6 +45,7 @@ export default function Login() {
             resizeMode="contain"
           />
         </View>
+
         <View style={styles.card}>
           <View style={styles.formContainer}>
             {/* EMAIL */}
@@ -57,7 +71,6 @@ export default function Login() {
             </View>
 
             {/* PASSWORD */}
-
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.inputContainer}>
@@ -77,6 +90,7 @@ export default function Login() {
                   onChangeText={setPassword}
                   secureTextEntry={!showPassword}
                 />
+
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
                   style={styles.eyeIcon}
@@ -89,6 +103,7 @@ export default function Login() {
                 </TouchableOpacity>
               </View>
             </View>
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleLogin}
@@ -100,6 +115,7 @@ export default function Login() {
                 <Text style={styles.buttonText}>Login</Text>
               )}
             </TouchableOpacity>
+
             {/* FOOTER */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>Don't have an account?</Text>
@@ -112,6 +128,6 @@ export default function Login() {
           </View>
         </View>
       </View>
-    </KeyboardAwareScrollView>
+    </KeyboardAvoidingView>
   );
 }
