@@ -19,9 +19,9 @@ import COLORS from "../../constants/colors";
 import Loader from "../../components/Loader";
 
 import { API_URL } from "../../constants/api";
-/* import Constants from "expo-constants";
+// import Constants from "expo-constants";
 
-const API_URL = Constants.expoConfig.extra.backendUrl; */
+// const API_URL = Constants.expoConfig.extra.backendUrl;
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

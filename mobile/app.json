@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "mobile",
+    "owner": "khantminhtut",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,6 +9,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "projectId": "4c2cda71-582a-4469-8e55-e7ea21c34e63",
     "ios": {
       "supportsTablet": true
     },
@@ -38,6 +40,7 @@
     },
     "extra": {
       "router": {},
+
       "eas": {
         "projectId": "4c2cda71-582a-4469-8e55-e7ea21c34e63"
       }
