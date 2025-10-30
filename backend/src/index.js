@@ -46,7 +46,9 @@ app.use("/api/books", bookRoutes);
 // ✅ Serve frontend build when in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../mobile/dist")));
-  app.get(/.*/, (req, res) => {
+
+  // ✅ Compatible with Express v5
+  app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "../mobile/dist", "index.html"));
   });
 }
