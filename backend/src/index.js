@@ -16,18 +16,14 @@ job.start();
 app.use(express.json());
 app.use(cors());
 
-// --- API routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 
-// --- Serve frontend in production ---
 if (process.env.NODE_ENV === "production") {
-  const clientPath = path.join(__dirname, "../mobile/dist");
-  app.use(express.static(clientPath));
+  app.use(express.static(path.join(__dirname, "../mobile/dist")));
 
-  // ✅ Express 5 catch-all fallback
-  app.use((req, res) => {
-    res.sendFile(path.join(clientPath, "index.html"));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../mobile/dist", "index.html"));
   });
 }
 
