@@ -16,7 +16,7 @@ import styles from "../../assets/styles/create.styles";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
 import { useAuthStore } from "../../store/authStore";
-// import { API_URL } from "../../constants/api";
+import { API_URL } from "../../constants/api";
 /* import Constants from "expo-constants";
 
 const API_URL = Constants.expoConfig.extra.backendUrl; */
@@ -103,7 +103,7 @@ export default function Create() {
 
       const imageDataUrl = `data:${imageType};base64,${imageBase64}`;
 
-      const response = await fetch("http://localhost:3000/api/books", {
+      const response = await fetch(`${API_URL}/books`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
