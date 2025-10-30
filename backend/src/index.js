@@ -14,46 +14,23 @@ const __dirname = path.resolve();
 
 job.start();
 app.use(express.json());
+app.use(cors());
 
-// ✅ CORS setup
-const allowedOrigins = [
-  "http://localhost:3000", // local dev web
-  "http://localhost:8081", // Expo web
-  "https://book-w.vercel.app", // your deployed frontend
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow mobile / server requests
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      console.warn("❌ Blocked by CORS:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
-
-// Handle preflight requests
-app.options("*", cors());
-
-// ✅ API routes
+// --- API routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 
-// ✅ Serve frontend build when in production
+// --- Serve frontend in production ---
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../mobile/dist")));
+  const clientPath = path.join(__dirname, "../mobile/dist");
+  app.use(express.static(clientPath));
 
-  // ✅ Compatible with Express v5
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../mobile/dist", "index.html"));
+  // ✅ Express 5 catch-all fallback
+  app.use((req, res) => {
+    res.sendFile(path.join(clientPath, "index.html"));
   });
 }
 
-// ✅ Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
   connectDB();
