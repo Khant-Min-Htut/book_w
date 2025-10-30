@@ -20,10 +20,10 @@ import { Image } from "expo-image";
 import { sleep } from ".";
 import Loader from "../../components/Loader";
 
-// import { API_URL } from "../../constants/api";
-import Constants from "expo-constants";
+import { API_URL } from "../../constants/api";
+/* import Constants from "expo-constants";
 
-const API_URL = Constants.expoConfig.extra.backendUrl;
+const API_URL = Constants.expoConfig.extra.backendUrl; */
 
 export default function Profile() {
   const [books, setBooks] = useState([]);

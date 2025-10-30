@@ -3,11 +3,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // const API_URL = "https://book-w.onrender.com/api/auth";
 
-// import { API_URL } from "../constants/api";
+import { API_URL } from "../constants/api";
 
-import Constants from "expo-constants";
+/* import Constants from "expo-constants";
 
-const API_URL = Constants.expoConfig.extra.backendUrl;
+const API_URL = Constants.expoConfig.extra.backendUrl; */
 
 export const useAuthStore = create((set) => ({
   user: null,
