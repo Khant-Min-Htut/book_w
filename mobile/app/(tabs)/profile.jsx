@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from "react-native";
 import { useRouter } from "expo-router";
-
+import { API_URL } from "../../constants/api";
 import { useAuthStore } from "../../store/authStore";
 import styles from "../../assets/styles/profile.styles";
 import ProfileHeader from "../../components/ProfileHeader";
@@ -19,11 +19,6 @@ import COLORS from "../../constants/colors";
 import { Image } from "expo-image";
 import { sleep } from ".";
 import Loader from "../../components/Loader";
-
-import { API_URL } from "../../constants/api";
-/* import Constants from "expo-constants";
-
-const API_URL = Constants.expoConfig.extra.backendUrl; */
 
 export default function Profile() {
   const [books, setBooks] = useState([]);

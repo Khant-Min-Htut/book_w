@@ -1,27 +1,19 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
 import { useAuthStore } from "../../store/authStore";
-
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
-
 import styles from "../../assets/styles/home.styles";
-
+import { API_URL } from "../../constants/api";
 import { Ionicons } from "@expo/vector-icons";
 import { formatPublishDate } from "../../lib/utils";
 import COLORS from "../../constants/colors";
 import Loader from "../../components/Loader";
-
-//import { API_URL } from "../../constants/api";
-// import Constants from "expo-constants";
-
-// const API_URL = Constants.expoConfig.extra.backendUrl;
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -38,19 +30,13 @@ export default function Home() {
       if (refresh) setRefreshing(true);
       else if (pageNum === 1) setLoading(true);
 
-      const response = await fetch(
-        `http://localhost:3000/api/books?page=${pageNum}&limit=2`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`${API_URL}/books?page=${pageNum}&limit=2`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.message || "Failed to fetch books");
-
-      // todo fix it later
-      // setBooks((prevBooks) => [...prevBooks, ...data.books]);
 
       const uniqueBooks =
         refresh || pageNum === 1
@@ -62,7 +48,6 @@ export default function Home() {
             );
 
       setBooks(uniqueBooks);
-
       setHasMore(pageNum < data.totalPages);
       setPage(pageNum);
     } catch (error) {
@@ -85,42 +70,6 @@ export default function Home() {
     }
   };
 
-  const renderItem = ({ item }) => {
-    const user = item.user || {}; // fallback to empty object
-    const profileImage = user.profileImage || "https://via.placeholder.com/40";
-    const username = user.username || "Unknown";
-
-    return (
-      <View style={styles.bookCard}>
-        <View style={styles.bookHeader}>
-          <View style={styles.userInfo}>
-            <Image source={{ uri: profileImage }} style={styles.avatar} />
-            <Text style={styles.username}>{username}</Text>
-          </View>
-        </View>
-
-        <View style={styles.bookImageContainer}>
-          <Image
-            source={item.image}
-            style={styles.bookImage}
-            contentFit="cover"
-          />
-        </View>
-
-        <View style={styles.bookDetails}>
-          <Text style={styles.bookTitle}>{item.title}</Text>
-          <View style={styles.ratingContainer}>
-            {renderRatingStars(item.rating)}
-          </View>
-          <Text style={styles.caption}>{item.caption}</Text>
-          <Text style={styles.date}>
-            Shared on {formatPublishDate(item.createdAt)}
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
   const renderRatingStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -135,6 +84,57 @@ export default function Home() {
       );
     }
     return stars;
+  };
+
+  const renderItem = ({ item }) => {
+    // Defensive checks
+    const user = item?.user;
+    const imageUri =
+      item?.image?.startsWith("http") || item?.image?.startsWith("file")
+        ? item.image
+        : `${API_URL}/${item?.image}`; // fallback if image is relative
+
+    return (
+      <View style={styles.bookCard}>
+        {/* Header */}
+        <View style={styles.bookHeader}>
+          <View style={styles.userInfo}>
+            <Image
+              source={{
+                uri:
+                  user?.profileImage ??
+                  "https://cdn-icons-png.flaticon.com/512/847/847969.png", // fallback avatar
+              }}
+              style={styles.avatar}
+            />
+            <Text style={styles.username}>
+              {user?.username ?? "Unknown User"}
+            </Text>
+          </View>
+        </View>
+
+        {/* Book Image */}
+        <View style={styles.bookImageContainer}>
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.bookImage}
+            contentFit="cover"
+          />
+        </View>
+
+        {/* Details */}
+        <View style={styles.bookDetails}>
+          <Text style={styles.bookTitle}>{item?.title ?? "Untitled"}</Text>
+          <View style={styles.ratingContainer}>
+            {renderRatingStars(item?.rating ?? 0)}
+          </View>
+          <Text style={styles.caption}>{item?.caption ?? ""}</Text>
+          <Text style={styles.date}>
+            Shared on {formatPublishDate(item?.createdAt)}
+          </Text>
+        </View>
+      </View>
+    );
   };
 
   if (loading) return <Loader />;
