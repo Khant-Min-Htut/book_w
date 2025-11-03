@@ -15,17 +15,10 @@ job.start();
 app.use(express.json());
 app.use(cors());
 
-app.use(
-  cors({
-    origin: ["http://localhost:8081"],
-    credentials: true,
-  })
-);
-
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port:http://localhost:${PORT}`);
   connectDB();
 });
