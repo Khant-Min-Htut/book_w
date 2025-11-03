@@ -16,7 +16,4 @@ A community-driven book recommendation app built with **React Native (Expo)** fo
 
 ---
 
-## Project Structure
-
-### Backend (`/backend`)
 
