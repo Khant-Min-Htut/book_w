@@ -94,12 +94,14 @@ router.delete("/:id", protectRoute, async (req, res) => {
         await cloudinary.uploader.destroy(publicId);
       } catch (deleteError) {
         console.log("Error deleting image from cloudinary", deleteError);
+        // console.log("Error creatingn image from cloudinary", deleteError)
       }
     }
 
     await book.deleteOne();
 
     res.json({ message: "Book deleted successfully" });
+    res.json({});
   } catch (error) {
     console.log("Error deleting book", error);
     res.status(500).json({ message: "Internal server error" });
